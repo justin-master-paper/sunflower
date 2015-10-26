@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% set page_title="邀请小伙伴" %}
+{% set active_page="invite_people" %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            {% if not invite_url %}
+            <form id="invite_people" class="form-inline {% if error!=None %} error {% endif %}" method="post">
+                <input type="text" class="span4" name="username" placeholder="用户名,可以是汉字、字母、数字和下划线">
+                <button type="submit" class="btn btn-primary">邀请TA</button>
+                {% if error!=None %}
+                <span class="help-inline">{{ error }}</span>
+                {% endif %}
+            </form>
+            {% else %}
+            <blockquote><a href="{{ invite_url }}" target="_blank">请复制该链接，并发给你的小伙伴</a></blockquote>
+            {% endif %}
+        </div>
+    </div><!--row-fluid-->
+</div><!--container-fluid-->
+{% endblock content %}

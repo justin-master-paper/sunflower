@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% set page_title="Home" %}
+{% set active_page="home" %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="alert alert-success">
+                {{ user['name'] }},谢谢你帮我做分类！
+            </div>
+        </div>
+    </div><!--row-fluid-->
+    {% if contributors %}
+    <div class="row-fluid">
+        <div class="span12">
+            <hr class="featurette-divider">
+            <h3>全部用户</h3>
+            <table class="table table-striped">
+                {% for contr in contributors %}
+                {% if loop.first %}
+                <tr>
+                {% endif %}
+                    <td>{{ contr['name'] }}</td>
+                {% if loop.index0 % 3 == 0 and not loop.first and not loop.last %}
+                </tr>
+                <tr>
+                {% endif %}
+                {% if loop.last %}
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </table>
+        </div>
+    </div><!--row-fluid-->
+    {% endif %}
+</div><!--container-fluid-->
+{% endblock content %}

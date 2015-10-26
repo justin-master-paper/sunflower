@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <meta name="baidu-site-verification" content="jHzz6uFYyB9qsVCx" />
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        {% set page_title=page_title|default('Home') -%}
+        <title>{{ page_title }} - Sunflower</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name ="keywords" content="boymonster">
+        <meta name="description" content="">
+        
+        <meta http-equiv="Content-Language" content="zh-cn" />
+
+        <!-- Le styles -->
+        <link href="http://cdnjs.bootcss.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css" rel="stylesheet">
+<!--
+        <link href="./static/css/bootstrap.min.css" rel="stylesheet">
+-->
+        <link href="/static/css/base.css" rel="stylesheet">
+        <link href="http://cdnjs.bootcss.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
+    
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+          <script src="//cdnjs.bootcss.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
+        <![endif]-->
+    
+        <!-- Fav and touch icons -->
+        <link rel="shortcut icon" href="/static/icon/ishare.ico">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+          <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+                        <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+                                       <link rel="shortcut icon" href="../assets/ico/favicon.png">
+    </head>
+    
+    <body>
+        {% block header %}
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            {% set navigation=[
+                ('/home','home','主页'),
+                ('/invite-people','invite_people','邀请小伙伴来帮忙'),
+                ] -%}
+            {% set active_page= active_page|default('') -%}
+            
+            <div class="navbar-inner">
+                <div class="container">
+                    <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="brand" href="/home"><img src="/static/icon/boymonster.png">Sunflower</a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav">
+                            {% for href, id, caption in navigation %}
+                            <li {% if id== active_page %}class="active" {% endif %}><a href="{{ href|e }}">{{ caption|e }}</a></li>
+                            {% endfor %}
+                        </ul>
+                        <ul class="nav pull-right">
+                            {% if user %}
+                            <li><a href="/user/{{ user['name'] }}">{{ user['name'] }}</a></li>
+                            {% endif %}
+                        </ul>
+                    </div><!--/.nav-collapse -->
+                </div>
+            </div><!-- /navbar-inner -->
+        </div><!-- /navbar -->
+        {% endblock header %}
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span10 offset1">
+                    {% block content %}
+                    {% endblock content %}
+                </div>
+            </div>
+
+            <hr class="featurette-divider">
+            {% block footer %}
+            <!-- FOOTER -->
+            <footer id="footer">
+                <div class="container">
+                    <p class="muted credit text-right" >&copy; 2015 Boy Monster, Inc. &middot; <a href="/about">说明</a> &middot; <a href="/contact">联系我</a></p>
+                </div>
+            </footer>
+            {% endblock footer %}
+        </div> <!-- /container -->
+        
+        <!-- Le javascript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="http://cdnjs.bootcss.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script src="http://cdnjs.bootcss.com/ajax/libs/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+        {% block javascript %}
+        {% endblock javascript %}
+
+    </body>
+</html>

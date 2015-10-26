@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% set page_title="issue分类" %}
+{% set active_page="issue" %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="repo">
+            </div>
+            <div class="issue">
+                <dl>
+                    <dt>Issue 标题</dt>
+                    <dd>{{ issue['title'] }}</dd>
+                    <dt>Issue 描述</dt>
+                    <dd>{{ issue['body'] }}</dd>
+                    <dt>Issue 标签</dt>
+                    <dd>{{ issue['labels'] }}</dd>
+                    <dt>Issue 状态</dt>
+                    <dd>{{ issue['state'] }}</dd>
+                </dl>
+            </div>
+            <div class="issue-comments">
+            </div>
+
+            <hr class="featurette-divider">
+
+            <div class="classifications">
+                <form class="form-horizontal" method="post">
+                    {% for clas in  DCSL %}
+                    <div class="control-group {% if defect_classified != None and defect_classified[clas]['error'] != None %} error {% endif %}">
+                        <label class="control-label" for="defectType">{{ DCS[clas]['name'][1] }}</label>
+                        <div class="controls">
+                            {% for defect_clas in DCS[clas]['classification'] %}
+                            <label class="radio inline">
+                                <input type="radio" name="{{ DCS[clas]['name'][0] }}" value="{{ defect_clas[0] }}" {% if defect_classified != None and defect_clas[0] == defect_classified[clas]['data'] %} checked {% endif %}>
+                                {{ defect_clas[1] }}
+                            </label>
+                            {% endfor %}
+                        </div>
+                        {% if defect_classified != None and defect_classified[clas]['error'] != None %}
+                        <div class="controls">
+                            <span class="help-inline">{{ defect_classified[clas]['error'] }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <div class="control-group">
+                        <div class="controls">
+                            <button type="submit" class="btn">提交</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div><!--row-fluid-->
+</div><!--container-fluid-->
+{% endblock content %}
+{% block javascript %}
+<script type="text/javascript">
+    var url = "{{ issue['comments_url'] }}";
+    $(document).ready(function(){
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(data){
+                console.log('data:',data);
+                createCommentElements(data);
+
+            },
+            error: function(err){
+                console.log('ajax error');
+            }
+        });
+
+        function createCommentElements(comments){
+            var dl = document.createElement('dl');
+            var dt = document.createElement('dt');
+            dt.innerHTML = "关于该issue的评论";
+            dl.appendChild(dt);
+            for(var i=0; i < comments.length; i++){
+                var comment = comments[i];
+                var dd = document.createElement('dd');
+                var ddText = '[' + comment.updated_at + '] ' + comment.user.login + ': ' + comment.body; 
+                console.log('ddText:', ddText);
+                // not safe
+                dd.innerHTML = ddText;
+                dl.appendChild(dd);
+            }
+            $('.issue-comments').append(dl);
+        }
+    });
+</script>
+{% endblock javascript %}

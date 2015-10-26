@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% set page_title="Home" %}
+{% set active_page="home" %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="alert alert-success">
+                {{ user['name'] }},谢谢你帮我做分类！
+            </div>
+            <div class="text-center">
+                <a class="btn btn-primary" href="/classify">开始分类</a>
+            </div>
+        </div>
+    </div><!--row-fluid-->
+</div><!--container-fluid-->
+{% endblock content %}
