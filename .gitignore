@@ -27,6 +27,7 @@ test.output.*
 tmp.*
 
 log/
+logs/
 env/*.local.sh
 
 nohup.*
