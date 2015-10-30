@@ -13,9 +13,15 @@ from db import db
 from setting import render
 from account import AccountHandler, valid_name, valid_user
 
+SEED_USER = os.getenv('SEED_USER', 'justin')
+
 def get_all_users():
     users = db.users.find()
     return users
+
+def generate_seed_user():
+    if not get_all_users():
+        db.users.insert({'name': SEED_USER})
 
 class InvitePeopleHandler(AccountHandler):
     def write_html(self, user=None, error=None, invite_url=None):
@@ -62,3 +68,5 @@ class UserHandler(AccountHandler):
         web.setcookie('user', user['name'])
         return self.write_html(user=user)
 
+if __name__ == '__main__':
+    generate_seed_user()
