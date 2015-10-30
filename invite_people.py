@@ -6,6 +6,7 @@
 # Mail: justinleoye@gmail.com 
 # Created Time: Thu Sep 17 21:03:18 2015
 #########################################################################
+import os
 import web
 from bson.json_util import dumps
 
@@ -22,6 +23,7 @@ def get_all_users():
 def generate_seed_user():
     if not get_all_users():
         db.users.insert({'name': SEED_USER})
+        print 'generate seed user'
 
 class InvitePeopleHandler(AccountHandler):
     def write_html(self, user=None, error=None, invite_url=None):
