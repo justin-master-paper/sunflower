@@ -5,6 +5,7 @@
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="span12">
+            <!--
             <div class="repo">
                 <dl>
                     <dt>Issue所属项目</dt>
@@ -26,10 +27,17 @@
             </div>
             <div class="issue-comments">
             </div>
+            -->
             <div class="github-reference">
-                <a href="{{ issue['html_url'] }}" target="__blank">以上信息还不够清楚，去github查看该issue详情 >>></a>
+                <dl>
+                    <dt>Issue 描述</dt>
+                    <dd>
+                        <a href="{{ issue['html_url'] }}" target="__blank">去github查看该issue详情 >>></a>
+                    </dd>
+                </dl>
             </div>
 
+            <h3>对Issue进行分类</h3>
             <hr class="featurette-divider">
 
             <div class="classifications">
@@ -65,37 +73,37 @@
 {% endblock content %}
 {% block javascript %}
 <script type="text/javascript">
-    var url = "{{ issue['comments_url'] }}";
-    $(document).ready(function(){
-        $.ajax({
-            url: url,
-            type: 'GET',
-            success: function(data){
-                console.log('data:',data);
-                createCommentElements(data);
+    //var url = "{{ issue['comments_url'] }}";
+    //$(document).ready(function(){
+    //    $.ajax({
+    //        url: url,
+    //        type: 'GET',
+    //        success: function(data){
+    //            console.log('data:',data);
+    //            createCommentElements(data);
 
-            },
-            error: function(err){
-                console.log('ajax error');
-            }
-        });
+    //        },
+    //        error: function(err){
+    //            console.log('ajax error');
+    //        }
+    //    });
 
-        function createCommentElements(comments){
-            var dl = document.createElement('dl');
-            var dt = document.createElement('dt');
-            dt.innerHTML = "关于该issue的评论";
-            dl.appendChild(dt);
-            for(var i=0; i < comments.length; i++){
-                var comment = comments[i];
-                var dd = document.createElement('dd');
-                var ddText = '[' + comment.updated_at + '] ' + comment.user.login + ': ' + comment.body; 
-                console.log('ddText:', ddText);
-                // not safe
-                dd.innerHTML = ddText;
-                dl.appendChild(dd);
-            }
-            $('.issue-comments').append(dl);
-        }
-    });
+    //    function createCommentElements(comments){
+    //        var dl = document.createElement('dl');
+    //        var dt = document.createElement('dt');
+    //        dt.innerHTML = "关于该issue的评论";
+    //        dl.appendChild(dt);
+    //        for(var i=0; i < comments.length; i++){
+    //            var comment = comments[i];
+    //            var dd = document.createElement('dd');
+    //            var ddText = '[' + comment.updated_at + '] ' + comment.user.login + ': ' + comment.body; 
+    //            console.log('ddText:', ddText);
+    //            // not safe
+    //            dd.innerHTML = ddText;
+    //            dl.appendChild(dd);
+    //        }
+    //        $('.issue-comments').append(dl);
+    //    }
+    //});
 </script>
 {% endblock javascript %}
