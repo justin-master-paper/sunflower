@@ -20,10 +20,15 @@ def get_all_users():
     users = db.users.find()
     return users
 
+def count_all_users():
+    count = db.users.count()
+    return count
+
 def generate_seed_user():
-    if not get_all_users():
+    if not count_all_users():
         db.users.insert({'name': SEED_USER})
         print 'generate seed user'
+    print 'seed user already generated'
 
 class InvitePeopleHandler(AccountHandler):
     def write_html(self, user=None, error=None, invite_url=None):
