@@ -121,7 +121,7 @@ DEFECT_CLAS_LIST = ['type', 'serverity', 'priority', 'status', 'origin', 'source
 DEFECT_CLASSIFICATIONS = {
     "type": {
         "name": ("defect_type", u"缺陷类型"),
-        "classification": [("function", "Function"), ("assignment", "Assignment"), ("interface", "Interface"), ("checking", "Checking"), ("build_package_merge", "Build/Package/Merge"), ("documentation", "Documentation"), ("algorithm", "Algorithm"), ("user_interface", "User Interface"), ("performance", "Performance"), ("norms", "Norms")]
+        "classification": [("function", u"Function--影响了重要的特性、用户界面、产品接口、硬件结构接口和全局数据结构。并且设计文档需要正式的变更。如逻辑,指针,循环,递归,功能等缺陷。"), ("assignment", u"Assignment--需要修改少量代码,如初始化或控制块。如声明、重复命名,范围、限定等缺陷。"), ("interface", u"Interface--与其他组件、模块或设备驱动程序、调用参数、控制块或参数列表相互影响的缺陷。"), ("checking", u"Checking--提示的错误信息,不适当的数据验证等缺陷。"), ("build_package_merge", u"Build/Package/Merge--由于配置库、变更管理或版本控制引起的错误。"), ("documentation", u"Documentation--影响发布和维护,包括注释。"), ("algorithm", u"Algorithm--算法错误。"), ("user_interface", u"User Interface--人机交互特性:屏幕格式,确认用户输入,功能有效性,页面排版等方面的缺陷。"), ("performance", u"Performance--不满足系统可测量的属性值,如:执行时间,事务处理速率等。"), ("norms", u"Norms--不符合各种标准的要求,如编码标准、设计符号等。")]
     },
     "serverity": {
         "name": ("defect_serverity", u"缺陷严重程度"),
