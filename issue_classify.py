@@ -16,8 +16,12 @@ from db import db
 from setting import render
 from account import AccountHandler
 
-def get_issue_not_classified_by_random():
+def count_issues():
     cnt = db.issues.find({'classified': {'$ne': True}}).count()
+    return cnt
+
+def get_issue_not_classified_by_random():
+    cnt = count_issues()
     skip = random.randint(0,cnt-1)
     issue = db.issues.find({'classified': {'$ne': True}}).skip(skip).limit(1)
     if issue:
