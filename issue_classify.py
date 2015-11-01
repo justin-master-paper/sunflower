@@ -16,7 +16,7 @@ from db import db
 from setting import render
 from account import AccountHandler
 
-not_to_be_classified_now = ['https://api.github.com/repos/moment/moment', 'https://api.github.com/repos/jadejs/jade']
+not_to_be_classified_now = ['https://api.github.com/repos/webpy/webpy', 'https://api.github.com/repos/jadejs/jade']
 
 not_to_classify_all_issues = True
 
