@@ -16,14 +16,24 @@ from db import db
 from setting import render
 from account import AccountHandler
 
+not_to_be_classified_now = ['https://api.github.com/repos/moment/moment', 'https://api.github.com/repos/jadejs/jade']
+
+not_to_classify_all_issues = True
+
 def count_issues():
-    cnt = db.issues.find({'classified': {'$ne': True}}).count()
+    if not_to_classify_all_issues:
+        cnt = db.issues.find({'classified': {'$ne': True}, 'repo': {'$nin': not_to_be_classified_now}}).count()
+    else:
+        cnt = db.issues.find({'classified': {'$ne': True}}).count()
     return cnt
 
 def get_issue_not_classified_by_random():
     cnt = count_issues()
     skip = random.randint(0,cnt-1)
-    issue = db.issues.find({'classified': {'$ne': True}}).skip(skip).limit(1)
+    if not_to_classify_all_issues:
+        issue = db.issues.find({'classified': {'$ne': True}, 'repo': {'$nin': not_to_be_classified_now}}).skip(skip).limit(1)
+    else:
+        issue = db.issues.find({'classified': {'$ne': True}}).skip(skip).limit(1)
     if issue:
         return issue[0]
     return None
