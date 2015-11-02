@@ -45,6 +45,18 @@ def get_issue(filters):
 def set_issue_classified(filters):
     db.issues.update(filters, {'$set': {'classified': True}}, multi = True)
 
+def increase_user_classifying_count(filters):
+    if not db.user_classifying_account.find(filters).count():
+        db.user_classifying_account.insert({'user': filters['user'], 'count': 1})
+    else:
+        db.user_classifying_account.update(filters, {'$inc': {'count': 1}}, multi = True)
+
+def get_user_classifying_cnt(filters):
+    account = db.user_classifying_account.find_one(filters)
+    if account:
+        return account['count']
+    return 0
+
 def gen_repo(repo_user, repo):
     return 'https://api.github.com/repos/'+repo_user+'/'+repo
 
@@ -72,8 +84,8 @@ class RandomIssueToClassifyHandler(AccountHandler):
         return '没有issue需要分类了'
 
 class IssueClassifyHandler(AccountHandler):
-    def write_html(self, user=None, issue=None, defect_classified=None):
-        return render.issue_classify(user=user, DCSL=DEFECT_CLAS_LIST, DCS=DEFECT_CLASSIFICATIONS, issue=issue, defect_classified=defect_classified)
+    def write_html(self, user=None, issue=None, defect_classified=None, user_classifying_cnt=None):
+        return render.issue_classify(user=user, DCSL=DEFECT_CLAS_LIST, DCS=DEFECT_CLASSIFICATIONS, issue=issue, defect_classified=defect_classified, user_classifying_cnt=user_classifying_cnt)
 
     def get_issue(self, repo_user, repo, number):
         repo = gen_repo(repo_user, repo)
@@ -83,13 +95,20 @@ class IssueClassifyHandler(AccountHandler):
     def set_issue_classified(self, repo, number):
         set_issue_classified({'repo': repo, 'number': int(number)})
 
+    def increase_user_classifying_count(self, user):
+        increase_user_classifying_count({'user': user['name']})
+
+    def get_user_classifying_cnt(self, user):
+        return get_user_classifying_cnt({'user': user['name']})
+
     def GET(self, repo_user, repo, number):
         user = self.valid()
         if not user:
             return web.notfound("Sorry, the page you were looking for was not found.")
 
         issue = self.get_issue(repo_user, repo, number)
-        return self.write_html(user=user, issue=issue)
+        user_classifying_cnt = self.get_user_classifying_cnt(user)
+        return self.write_html(user=user, issue=issue, user_classifying_cnt=user_classifying_cnt)
 
     def POST(self, repo_user, repo, number):
         user = self.valid()
@@ -123,10 +142,12 @@ class IssueClassifyHandler(AccountHandler):
                 defect_classified[defect_clas] = data
 
         if any_error:
-            return self.write_html(issue=issue, defect_classified=defect_classify_result)
+            user_classifying_cnt = self.get_user_classifying_cnt(user)
+            return self.write_html(user=user, issue=issue, defect_classified=defect_classify_result, user_classifying_cnt=user_classifying_cnt)
 
         db.defects_classified.update({'repo': issue['repo'], 'number': issue['number']}, defect_classified, upsert=True)
         self.set_issue_classified(issue['repo'], issue['number'])
+        self.increase_user_classifying_count(user)
 
         self.redirect('/classify')
 
