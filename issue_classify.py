@@ -18,22 +18,32 @@ from account import AccountHandler
 
 not_to_be_classified_now = ['https://api.github.com/repos/moment/moment', 'https://api.github.com/repos/jadejs/jade']
 
+repos_dict = {
+    'echart': 'https://api.github.com/repos/ecomfe/echarts'
+}
+
 not_to_classify_all_issues = True
 
-def count_issues():
-    if not_to_classify_all_issues:
-        cnt = db.issues.find({'classified': {'$ne': True}, 'repo': {'$nin': not_to_be_classified_now}}).count()
+def count_issues(repo=None):
+    if repo:
+        filters = {'classified': {'$ne': True}, 'repo': repo}
+    elif not_to_classify_all_issues:
+        filters = {'classified': {'$ne': True}, 'repo': {'$nin': not_to_be_classified_now}}
     else:
-        cnt = db.issues.find({'classified': {'$ne': True}}).count()
+        filters = {'classified': {'$ne': True}}
+    cnt = db.issues.find(filters).count()
     return cnt
 
-def get_issue_not_classified_by_random():
-    cnt = count_issues()
+def get_issue_not_classified_by_random(repo=None):
+    cnt = count_issues(repo)
     skip = random.randint(0,cnt-1)
-    if not_to_classify_all_issues:
-        issue = db.issues.find({'classified': {'$ne': True}, 'repo': {'$nin': not_to_be_classified_now}}).skip(skip).limit(1)
+    if repo:
+        filters = {'classified': {'$ne': True}, 'repo': repo}
+    elif not_to_classify_all_issues:
+        filters = {'classified': {'$ne': True}, 'repo': {'$nin': not_to_be_classified_now}}
     else:
-        issue = db.issues.find({'classified': {'$ne': True}}).skip(skip).limit(1)
+        filters = {'classified': {'$ne': True}}
+    issue = db.issues.find(filters).skip(skip).limit(1)
     if issue:
         return issue[0]
     return None
@@ -77,7 +87,16 @@ class RandomIssueToClassifyHandler(AccountHandler):
         if not user:
             return web.notfound("Sorry, the page you were looking for was not found.")
 
-        issue = get_issue_not_classified_by_random()
+        repo = None
+        if user['name'] == u'平兄':
+            repo = 'echart'
+            try:
+                repo = repos_dict[repo]
+            except KeyError,e:
+                print e
+                repo = None
+        print 'repo:',repo
+        issue = get_issue_not_classified_by_random(repo)
         if issue:
             repo_user,repo = repo_to_repo_user_and_short_repo(issue['repo'])
             self.redirect('/classify/repo/%s/%s/issue/%s' % (repo_user, repo, issue['number']))
